@@ -1,0 +1,7 @@
+{
+    "app_name":"Covid19Analysis",
+    "git_url":"'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/{}.csv'",
+    "s3_incoming":"/mnt/s3data/squreshiftbucket/Incoming/",
+    "s3_reference":"/mnt/s3data/squreshiftbucket/reference/country/",
+    "s3_output":"/mnt/s3data/squreshiftbucket/Output/"
+}
