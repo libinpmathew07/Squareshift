@@ -25,7 +25,7 @@ def getfile(spark,config):
     else:
         print('its not downloades retrying after two minutes')
         time.sleep(12)
-        getfile()
+        getfile(spark,config)
 
 def get_date_range_daily_process():
     '''Get the daily processnig range'''
