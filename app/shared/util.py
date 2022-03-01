@@ -37,7 +37,7 @@ def get_date_range_daily_process():
 
 def check_availability(config):
     '''Check whether the 14 days are available in s3 Incoming or not'''
-    date_available=[i[1].replace('/','') for i in dbutils.fs.ls(config.get('S3_Incoming'))]
+    date_available=[i[1].replace('/','') for i in dbutils.fs.ls(config.get('s3_incoming'))]
     daily_process_dates=get_date_range_daily_process()
     for i in daily_process_dates:
         if i in date_available:
@@ -68,7 +68,7 @@ def genAggDF(df):
 
 def mergeWithReference(spark,df,config):
     '''Join the Dataframe with the refference DF'''
-    referenceDf=spark.read.options(header=True,inferSchema=True).csv(config.get('S3_refernce'))
+    referenceDf=spark.read.options(header=True,inferSchema=True).csv(config.get('s3_reference'))
     joined_DF=df.join(referenceDf,'Country_Region','left').orderBy(referenceDf['per'].desc())
     filDf=joined_DF.withColumn('Recovered',addRecovery(joined_DF['Total_Confirmed_Cases'],joined_DF['per'])).groupBy('Country_region').agg(sum('Total_Confirmed_Cases').alias('total_confirmed'),sum('Recovered').alias('Total_recovered')).withColumn('Recovered_rate',addRecovrRate('total_confirmed','Total_recovered'))
     return filDf
@@ -85,7 +85,7 @@ def final_df(df,topcountry):
     mDF=rankDF.filter(rankDF['rank']<=3)
     return mDF
   
-def writeouttos3(df,config):
+def writeouttos3(config,df):
     path=config.get('S3_output')+str(date.today().strftime('%m-%d-%Y')+'/')
     df.write.options(header=True).mode('overwrite').csv(path)
 

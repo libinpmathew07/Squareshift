@@ -7,11 +7,11 @@ def extract_data(spark,config):
 def transformData(spark,config):
     bp=config.get('s3_incoming')
     paths=[bp+i+'/' for i in get_date_range_daily_process()]
-    availableInIncoming=check_availability()
+    availableInIncoming=check_availability(config)
     if availableInIncoming:
         df1=generate_dataframe(spark,paths) 
         df=genAggDF(df1)
-        joinedDF=mergeWithReference(df)
+        joinedDF=mergeWithReference(spark,df,config)
         topcountry=get_top_ten_country(joinedDF)
         stDF=final_df(df1,topcountry)
         return stDF
@@ -26,6 +26,6 @@ def jobrun(spark,config):
     extract_data(spark,config)
     rawdf=transformData(spark,config)
     loadDataFrame(config,rawdf)
-    
+
 
 
